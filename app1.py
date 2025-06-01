@@ -236,7 +236,7 @@ with st.sidebar:
              - **Activation Function:** ReLU
              - **Output Activation:** Softmax
              """)
-
+temp_image_path = None
 # --- Handle Canvas Output and Prediction Button ---
 if canvas_result.image_data is not None:
     # Convert image data from Streamlit canvas (RGBA) to OpenCV (BGR).
@@ -279,12 +279,13 @@ if st.button("Predict Digits"):
 
 #   Clean up the temporary image file ---
 
-if os.path.exists(temp_image_path):
-   os.remove(temp_image_path) #removing any residual files after processing it
-
+if temp_image_path is not None and os.path.exists(temp_image_path):
+    os.remove(temp_image_path) # removing any residual files after processing it
 else:
     # If no image data is available from the canvas (e.g., on initial load)
+    # or if temp_image_path was never assigned a real path
     st.info("Draw a digit or multiple digits on the canvas above and click 'Predict Digits'.")
+
 
 
 #IMPROVEMTS:
