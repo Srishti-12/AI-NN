@@ -51,20 +51,20 @@ def get_digit_predictions(image_path):
         return [], None, "Error: Could not read image."
 
     #  Original Drawn Image (for visualization)
-    #print("Original image just after user entered")
-    #st.subheader("Intermediate Image Processing Steps (for debugging):")
-    #st.image(image, caption="1. Original Drawn Image (BGR)", channels="BGR", use_container_width=True)
+    print("Original image just after user entered")
+    st.subheader("Intermediate Image Processing Steps (for debugging):")
+    st.image(image, caption="1. Original Drawn Image (BGR)", channels="BGR", use_container_width=True)
     
 
     # Converting to grayscale
     print("******converting digit's image to gray scale now*********")
     gray = cv2.cvtColor(image.copy(), cv2.COLOR_BGR2GRAY)
-    #st.image(gray, caption="2. Grayscale Image", use_column_width=True)
+    st.image(gray, caption="2. Grayscale Image", use_column_width=True)
 
     # Apply Gaussian blur to smooth the image and reduce noise
     print("Removing blur using GaussianBlur")
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    #st.image(blurred, caption="3. Blurred Image", use_column_width=True)
+    st.image(blurred, caption="3. Blurred Image", use_column_width=True)
 
     print("@@@@@@************ADAPTIVE THRESHOLDING STARTED**********@@@@@@@")
 
@@ -83,7 +83,7 @@ def get_digit_predictions(image_path):
         C=5         # Current constant C , increasing or decreasing this has direct impact again started with 2
     )
     print("Displays inverted image in colour, that is BNW version")
-    #st.image(th, caption=f"Thresholded (Binary Inverted) Image (Block Size: {11}, C: {2})", use_column_width=True)
+    st.image(th, caption=f"Thresholded (Binary Inverted) Image (Block Size: {11}, C: {2})", use_column_width=True)
 
     print("Contours")
 
@@ -121,19 +121,19 @@ def get_digit_predictions(image_path):
     # Extracting the digit region of interest (ROI) from the thresholded image
         print("extracting the digit region of interest")
         digit_roi = th[y:y + h, x:x + w]
-        #st.image(digit_roi, caption=f"{i+1} Cropped Digit ROI (Binary)", use_column_width=True)
+        st.image(digit_roi, caption=f"{i+1} Cropped Digit ROI (Binary)", use_column_width=True)
         #Displays excat roi
 
         # Resizing the digit ROI to 18x18 pixels (MNIST model expects 28x28)
         # Using INTER_AREA interpolation for image shrinking so that it fits 28x28 perfectly
         resized_digit = cv2.resize(digit_roi, (18, 18), interpolation=cv2.INTER_AREA)
-        #st.image(resized_digit, caption=f"{i+1} Resized to 18x18", use_column_width=True)
+        st.image(resized_digit, caption=f"{i+1} Resized to 18x18", use_column_width=True)
         #Displays resized image
 
         # Padding the resized digit with 5 pixels of black pixels (0s) on top, bottom, left, right
         # This results in a 28x28 image (18 + 5 + 5 = 28) as expected by the model in keras
         padded_digit = np.pad(resized_digit, ((5, 5), (5, 5)), "constant", constant_values=0)
-        #st.image(padded_digit, caption=f"{i+1} Padded to 28x28 (Final image for model)", use_column_width=True)
+        st.image(padded_digit, caption=f"{i+1} Padded to 28x28 (Final image for model)", use_column_width=True)
         #displays padded image
 
         # Reshaping for the Keras model (batch_size, height, width, channels)
